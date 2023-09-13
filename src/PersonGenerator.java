@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class PersonGenerator {
     public static void main(String[] args) {
 
-        ArrayList<String> Persons = new ArrayList<String>();
+        ArrayList<Person> Persons = new ArrayList<>();
         Scanner input = new Scanner(System.in);
 
         while (true) {
@@ -19,9 +19,9 @@ public class PersonGenerator {
             String title = SafeInput.getNonZeroLenString(input, "What is the title?");
             int yearOfBirth = SafeInput.getInt(input, "What is the year of birth?");
 
-            String data = ID + ", " + firstName + ", " + lastName + ", " + title + ", " + yearOfBirth;
-            Persons.add(data);
+            Person person = new Person(ID, firstName, lastName, title, yearOfBirth);
 
+            Persons.add(person);
             boolean askUser = SafeInput.getYNConfirm(input, "Would you like to add another person to the file?");
             if (askUser == false) {
                 break;
@@ -32,9 +32,9 @@ public class PersonGenerator {
 
         try {
             BufferedWriter writer = Files.newBufferedWriter(fileName, StandardOpenOption.CREATE);
-
-            for (int i = 0; i < Persons.size(); i++) {
-                writer.write(Persons.get(i));
+            for (Person person : Persons) {
+                String csvRecord = person.toCSVDataRecord();
+                writer.write(csvRecord);
                 writer.newLine();
             }
             writer.close();
